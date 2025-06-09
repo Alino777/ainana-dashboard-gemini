@@ -239,4 +239,4 @@ function getWeekDays(baseDate = new Date(), offset = 0) {
       </div>
     </div>
   );
-
+}
