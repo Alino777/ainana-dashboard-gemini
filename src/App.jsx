@@ -160,34 +160,48 @@ function getWeekDays(baseDate = new Date(), offset = 0) {
 
   {/* Form nuovo appuntamento */}
   <form
-    onSubmit={(e) => {
-      e.preventDefault();
-      setAppointments((prev) => {
-        const key = selectedDate.toDateString();
-        const current = prev[key] || [];
-        return {
-          ...prev,
-          [key]: [...current, newAppt],
-        };
-      });
-      setNewAppt("");
-    }}
-    className="flex gap-2"
-  >
+  onSubmit={(e) => {
+    e.preventDefault();
+    if (!newAppt.trim()) return;
+    setAppointments((prev) => {
+      const key = selectedDate.toDateString();
+      const current = prev[key] || [];
+      return {
+        ...prev,
+        [key]: [...current, newAppt],
+      };
+    });
+    setNewAppt("");
+  }}
+  className="flex gap-2 items-center"
+>
+  <div className="relative w-full">
     <input
       type="text"
       value={newAppt}
       onChange={(e) => setNewAppt(e.target.value)}
       placeholder="Nuovo appuntamento"
-      className="flex-1 px-2 py-1 rounded border text-sm"
+      className="w-full px-3 py-1 pr-8 rounded border text-sm"
     />
-    <button
-      type="submit"
-      className="bg-yellow-400 text-white px-3 py-1 rounded text-sm"
-    >
-      Aggiungi
-    </button>
-  </form>
+    {newAppt && (
+      <button
+        type="button"
+        onClick={() => setNewAppt("")}
+        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs"
+      >
+        ✕
+      </button>
+    )}
+  </div>
+
+  <button
+    type="submit"
+    className="bg-yellow-400 text-white px-3 py-1 rounded text-sm"
+  >
+    Aggiungi
+  </button>
+</form>
+
 </div>
 
 
