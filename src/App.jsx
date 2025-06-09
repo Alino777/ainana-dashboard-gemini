@@ -63,10 +63,10 @@ export default function App() {
   </div>
 
   {/* Testo saluto */}
-  <div className="text-lg font-semibold text-[#333]">
-    Ciao {user?.name}, 
-    bentornata!
-  </div>
+  <div className="flex flex-col text-lg font-semibold text-[#333] leading-tight">
+  <span>Ciao {user?.name},</span>
+  <span>bentornata!</span>
+</div>
 </div>
       {/* Contenuto principale */}
       <div className="grid grid-cols-4 gap-4">
