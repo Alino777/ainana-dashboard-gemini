@@ -221,6 +221,44 @@ function ChartsSection() {
   const COLORS = ['#FFCE00', '#FF9F1C', '#3FA9F5'];
 
   return (
+    <div className="col-span-3 grid grid-cols-3 gap-4 mb-4">
+  {/* Box: Contatti */}
+  <div className="bg-yellow-100 rounded-2xl p-4 shadow flex flex-col justify-between">
+    <div className="flex items-center gap-2">
+      <span className="text-2xl">👥</span>
+      <div>
+        <h3 className="font-bold text-xl">800</h3>
+        <p className="text-sm">Contatti</p>
+      </div>
+    </div>
+    <p className="text-xs text-gray-600 mt-2">+20 lead</p>
+  </div>
+
+  {/* Box: Visualizzazioni */}
+  <div className="bg-yellow-100 rounded-2xl p-4 shadow flex flex-col justify-between">
+    <div className="flex items-center gap-2">
+      <span className="text-2xl">👁️</span>
+      <div>
+        <h3 className="font-bold text-xl">10 mila</h3>
+        <p className="text-sm">Visualizzazioni</p>
+      </div>
+    </div>
+    <p className="text-xs text-gray-600 mt-2">+1000 views</p>
+  </div>
+
+  {/* Box: Apprezzamenti */}
+  <div className="bg-yellow-100 rounded-2xl p-4 shadow flex flex-col justify-between">
+    <div className="flex items-center gap-2">
+      <span className="text-2xl">❤️</span>
+      <div>
+        <h3 className="font-bold text-xl">200</h3>
+        <p className="text-sm">Apprezzamenti</p>
+      </div>
+    </div>
+    <p className="text-xs text-gray-600 mt-2">+20 like</p>
+  </div>
+</div>
+
     <div className="col-span-3 grid grid-cols-3 gap-4">
       <div className="bg-white rounded-2xl p-4 shadow">
         <h3 className="font-bold mb-2">Media età</h3>
