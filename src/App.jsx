@@ -7,6 +7,7 @@ export default function App() {
   const [selectedDay, setSelectedDay] = useState("6");
   const [activeSection, setActiveSection] = useState("dashboard");
   const [date, setDate] = useState(new Date());
+  const user = { name: "Anna" };
 
   const tabs = [
     { key: "dashboard", label: "Dashboard" },
@@ -53,7 +54,19 @@ export default function App() {
           🔔
         </div>
       </nav>
+{/* Saluto utente */}
+<div className="flex items-center gap-4 px-6 mb-4">
+  {/* Placeholder per immagine profilo */}
+  <div className="w-12 h-12 rounded-full bg-yellow-200 flex items-center justify-center text-xl font-bold text-white shadow-inner">
+    {/* In futuro ci andrà un'immagine */}
+    <img src="https://via.placeholder.com/150" alt="Profilo" className="w-full h-full object-cover rounded-full" />
+  </div>
 
+  {/* Testo saluto */}
+  <div className="text-lg font-semibold text-[#333]">
+    Ciao {user?.name}, bentornata!
+  </div>
+</div>
       {/* Contenuto principale */}
       <div className="grid grid-cols-4 gap-4">
         {/* Colonna sinistra */}
