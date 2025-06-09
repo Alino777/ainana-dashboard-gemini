@@ -2,8 +2,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import 'react-calendar/dist/Calendar.css';
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  AreaChart, Area, CartesianGrid, Legend, PieChart, Pie, Cell
+  BarChart, Bar, XAxis, Tooltip, ResponsiveContainer,
+  AreaChart, Area, Legend, PieChart, Pie, Cell
 } from 'recharts';
 
 export default function App() {
@@ -27,7 +27,6 @@ export default function App() {
     const day = start.getDay();
     const diff = start.getDate() - day + (day === 0 ? -6 : 1);
     const days = [];
-
     for (let i = 0; i < 5; i++) {
       const d = new Date(start);
       d.setDate(diff + i);
@@ -38,6 +37,38 @@ export default function App() {
     }
     return days;
   }
+
+  const ageData = [
+    { group: '13-18', value: 30 },
+    { group: '19-25', value: 80 },
+    { group: '26-30', value: 50 },
+    { group: '31-40', value: 70 },
+    { group: '<40', value: 40 },
+  ];
+
+  const visitsData = Array.from({ length: 14 }, (_, i) => ({
+    day: `G${i + 1}`,
+    prime: Math.floor(Math.random() * 50 + 50),
+    check: Math.floor(Math.random() * 50),
+  }));
+
+  const pieData = [
+    { name: 'Empatico', value: 400 },
+    { name: 'Motivazionale', value: 200 },
+    { name: 'Funzionale', value: 200 },
+  ];
+
+  const adherenceData = [
+    { day: 'L', value: 60 },
+    { day: 'M', value: 80 },
+    { day: 'M', value: 40 },
+    { day: 'G', value: 90 },
+    { day: 'V', value: 75 },
+    { day: 'S', value: 90 },
+    { day: 'D', value: 60 },
+  ];
+
+  const COLORS = ['#FFCE00', '#FF9F1C', '#3FA9F5'];
 
   return (
     <div className="min-h-screen bg-[#fffceb] font-sans text-[#333] p-4">
@@ -83,7 +114,6 @@ export default function App() {
       <div className="grid grid-cols-4 gap-4">
         <div className="col-span-1 bg-white rounded-2xl p-4 shadow">
           <h2 className="text-lg font-semibold mb-4">Calendario</h2>
-
           <div>
             <div className="flex justify-between items-center mb-2">
               <button onClick={() => setWeekOffset((prev) => prev - 1)} className="text-xl px-2">←</button>
@@ -94,7 +124,6 @@ export default function App() {
               </h2>
               <button onClick={() => setWeekOffset((prev) => prev + 1)} className="text-xl px-2">→</button>
             </div>
-
             <div className="flex gap-2 mb-4">
               {getWeekDays(selectedDate, weekOffset).map((d) => {
                 const isActive = d.date.toDateString() === selectedDate.toDateString();
@@ -112,7 +141,6 @@ export default function App() {
                 );
               })}
             </div>
-
             <h3 className="font-semibold text-sm mb-2">
               Appuntamenti per il {selectedDate.toLocaleDateString("it-IT")}
             </h3>
@@ -129,13 +157,10 @@ export default function App() {
                       }));
                     }}
                     className="text-xs text-red-500 hover:text-red-700 ml-2"
-                  >
-                    ✕
-                  </button>
+                  >✕</button>
                 </div>
               ))}
             </div>
-
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -162,9 +187,7 @@ export default function App() {
                     type="button"
                     onClick={() => setNewAppt("")}
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs"
-                  >
-                    ✕
-                  </button>
+                  >✕</button>
                 )}
               </div>
               <button type="submit" className="bg-yellow-400 text-white px-3 py-1 rounded text-sm">
@@ -172,7 +195,6 @@ export default function App() {
               </button>
             </form>
           </div>
-
           <div className="mt-4">
             <h3 className="font-semibold mb-1">Ultime ricette caricate</h3>
             <div className="bg-gray-100 p-2 rounded mb-1">Pokè di quinoa, ceci e verdure</div>
@@ -181,157 +203,113 @@ export default function App() {
           </div>
         </div>
 
-        <ChartsSection />
-      </div>
-    </div>
-  );
-}
+        <div className="col-span-3 flex flex-col gap-4">
+          <div className="grid grid-cols-3 gap-4">
+            <div className="bg-yellow-100 rounded-2xl p-4 shadow flex flex-col justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">👥</span>
+                <div>
+                  <h3 className="font-bold text-lg">800</h3>
+                  <p className="text-sm">Contatti</p>
+                </div>
+              </div>
+              <p className="text-xs text-gray-600 mt-2">+20 lead</p>
+            </div>
 
-function ChartsSection() {
-  const ageData = [
-    { group: '13-18', value: 30 },
-    { group: '19-25', value: 80 },
-    { group: '26-30', value: 50 },
-    { group: '31-40', value: 70 },
-    { group: '<40', value: 40 },
-  ];
+            <div className="bg-yellow-100 rounded-2xl p-4 shadow flex flex-col justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">👁️</span>
+                <div>
+                  <h3 className="font-bold text-lg">10 mila</h3>
+                  <p className="text-sm">Visualizzazioni</p>
+                </div>
+              </div>
+              <p className="text-xs text-gray-600 mt-2">+1000 views</p>
+            </div>
 
-  const visitsData = Array.from({ length: 14 }, (_, i) => ({
-    day: `G${i + 1}`,
-    prime: Math.floor(Math.random() * 50 + 50),
-    check: Math.floor(Math.random() * 50),
-  }));
+            <div className="bg-yellow-100 rounded-2xl p-4 shadow flex flex-col justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">❤️</span>
+                <div>
+                  <h3 className="font-bold text-lg">200</h3>
+                  <p className="text-sm">Apprezzamenti</p>
+                </div>
+              </div>
+              <p className="text-xs text-gray-600 mt-2">+20 like</p>
+            </div>
+          </div>
 
-  const pieData = [
-    { name: 'Empatico', value: 400 },
-    { name: 'Motivazionale', value: 200 },
-    { name: 'Funzionale', value: 200 },
-  ];
+          <div className="grid grid-cols-3 gap-4">
+            <div className="bg-white rounded-2xl p-4 shadow">
+              <h3 className="font-bold mb-2">Media età</h3>
+              <ResponsiveContainer width="100%" height={180}>
+                <BarChart data={ageData}>
+                  <XAxis dataKey="group" />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="#FFB400" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
 
-  const adherenceData = [
-    { day: 'L', value: 60 },
-    { day: 'M', value: 80 },
-    { day: 'M', value: 40 },
-    { day: 'G', value: 90 },
-    { day: 'V', value: 75 },
-    { day: 'S', value: 90 },
-    { day: 'D', value: 60 },
-  ];
+            <div className="bg-white rounded-2xl p-4 shadow">
+              <h3 className="font-bold mb-2">Prime visita VS check</h3>
+              <ResponsiveContainer width="100%" height={180}>
+                <AreaChart data={visitsData}>
+                  <defs>
+                    <linearGradient id="colorPrime" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#3FA9F5" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="#3FA9F5" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="colorCheck" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#FF9F1C" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="#FF9F1C" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="day" />
+                  <Tooltip />
+                  <Area type="monotone" dataKey="prime" stroke="#3FA9F5" fill="url(#colorPrime)" />
+                  <Area type="monotone" dataKey="check" stroke="#FF9F1C" fill="url(#colorCheck)" />
+                  <Legend />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
 
-  const COLORS = ['#FFCE00', '#FF9F1C', '#3FA9F5'];
+            <div className="bg-white rounded-2xl p-4 shadow">
+              <h3 className="font-bold mb-2">Giugno 2025</h3>
+              <ResponsiveContainer width="100%" height={180}>
+                <PieChart>
+                  <Tooltip />
+                  <Pie
+                    data={pieData}
+                    innerRadius={50}
+                    outerRadius={70}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={true}
+                  >
+                    {pieData.map((_, index) => (
+                      <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+              <p className="text-sm mt-2 text-center">400 contatti hanno scelto un approccio empatico</p>
+            </div>
 
-  return (
-  <><div className="col-span-3 flex flex-col gap-4">
-  {/* Box metriche */}
-  <div className="grid grid-cols-3 gap-4">
-    {/* Contatti */}
-    <div className="bg-yellow-100 rounded-2xl p-4 shadow flex flex-col justify-between">
-      <div className="flex items-center gap-2">
-        <span className="text-2xl">👥</span>
-        <div>
-          <h3 className="font-bold text-lg">800</h3>
-          <p className="text-sm">Contatti</p>
+            <div className="col-span-3 bg-white rounded-2xl p-4 shadow mt-2">
+              <h3 className="font-bold mb-2">Adesione piani alimentari</h3>
+              <p className="text-sm text-red-600 mb-2">Molti utenti preferiscono sgarrare il sabato</p>
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={adherenceData}>
+                  <XAxis dataKey="day" />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="#FFCE00" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </div>
       </div>
-      <p className="text-xs text-gray-600 mt-2">+20 lead</p>
     </div>
-
-    {/* Visualizzazioni */}
-    <div className="bg-yellow-100 rounded-2xl p-4 shadow flex flex-col justify-between">
-      <div className="flex items-center gap-2">
-        <span className="text-2xl">👁️</span>
-        <div>
-          <h3 className="font-bold text-lg">10 mila</h3>
-          <p className="text-sm">Visualizzazioni</p>
-        </div>
-      </div>
-      <p className="text-xs text-gray-600 mt-2">+1000 views</p>
-    </div>
-
-    {/* Apprezzamenti */}
-    <div className="bg-yellow-100 rounded-2xl p-4 shadow flex flex-col justify-between">
-      <div className="flex items-center gap-2">
-        <span className="text-2xl">❤️</span>
-        <div>
-          <h3 className="font-bold text-lg">200</h3>
-          <p className="text-sm">Apprezzamenti</p>
-        </div>
-      </div>
-      <p className="text-xs text-gray-600 mt-2">+20 like</p>
-    </div>
-  </div>
-
-  {/* Grafici */}
-  <ChartsSection />
-</div>
-<div className="col-span-3 grid grid-cols-3 gap-4">
-        <div className="bg-white rounded-2xl p-4 shadow">
-          <h3 className="font-bold mb-2">Media età</h3>
-          <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={ageData}>
-              <XAxis dataKey="group" />
-              <Tooltip />
-              <Bar dataKey="value" fill="#FFB400" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="bg-white rounded-2xl p-4 shadow">
-          <h3 className="font-bold mb-2">Prime visita VS check</h3>
-          <ResponsiveContainer width="100%" height={180}>
-            <AreaChart data={visitsData}>
-              <defs>
-                <linearGradient id="colorPrime" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3FA9F5" stopOpacity={0.4} />
-                  <stop offset="95%" stopColor="#3FA9F5" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="colorCheck" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#FF9F1C" stopOpacity={0.4} />
-                  <stop offset="95%" stopColor="#FF9F1C" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="day" />
-              <Tooltip />
-              <Area type="monotone" dataKey="prime" stroke="#3FA9F5" fill="url(#colorPrime)" />
-              <Area type="monotone" dataKey="check" stroke="#FF9F1C" fill="url(#colorCheck)" />
-              <Legend />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="bg-white rounded-2xl p-4 shadow">
-          <h3 className="font-bold mb-2">Giugno 2025</h3>
-          <ResponsiveContainer width="100%" height={180}>
-            <PieChart>
-              <Tooltip />
-              <Pie
-                data={pieData}
-                innerRadius={50}
-                outerRadius={70}
-                fill="#8884d8"
-                dataKey="value"
-                label={true}
-              >
-                {pieData.map((_, index) => (
-                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-          <p className="text-sm mt-2 text-center">400 contatti hanno scelto un approccio empatico</p>
-        </div>
-
-        <div className="col-span-3 bg-white rounded-2xl p-4 shadow mt-2">
-          <h3 className="font-bold mb-2">Adesione piani alimentari</h3>
-          <p className="text-sm text-red-600 mb-2">Molti utenti preferiscono sgarrare il sabato</p>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={adherenceData}>
-              <XAxis dataKey="day" />
-              <Tooltip />
-              <Bar dataKey="value" fill="#FFCE00" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div></>
   );
 }
