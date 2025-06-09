@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { motion } from "framer-motion";
 
 export default function App() {
-  const [selectedDay, setSelectedDay] = useState("6");
   const [activeSection, setActiveSection] = useState("dashboard");
   const [date, setDate] = useState(new Date());
   const user = { name: "Giovanna" };
+  const [selectedDate, setSelectedDate] = useState(new Date());
+const [appointments, setAppointments] = useState({});
+const [newAppt, setNewAppt] = useState("");
+
 
   const tabs = [
     { key: "dashboard", label: "Dashboard" },
@@ -15,7 +18,23 @@ export default function App() {
     { key: "consigli", label: "Consigli" },
     { key: "client", label: "Client management" },
   ];
+// 🔁 Funzione per ottenere i 7 giorni della settimana attiva
+function getWeekDays(baseDate = new Date()) {
+  const start = new Date(baseDate);
+  const day = start.getDay(); // 0 (Domenica) -> 6 (Sabato)
+  const diff = start.getDate() - day + (day === 0 ? -6 : 1); // Inizio da Lunedì
+  const days = [];
 
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start.setDate(diff + i));
+    days.push({
+      label: d.toLocaleDateString("it-IT", { weekday: "short" }), // es. "lun"
+      date: d,
+    });
+  }
+
+  return days;
+}
   return (
     <div className="min-h-screen bg-[#fffceb] font-sans text-[#333] p-4">
       {/* Navbar con logo, tab animati, e notifiche */}
@@ -73,15 +92,75 @@ export default function App() {
         {/* Colonna sinistra */}
         <div className="col-span-1 bg-white rounded-2xl p-4 shadow">
           <h2 className="text-lg font-semibold mb-4">Calendario</h2>
-          <Calendar
-            onChange={setDate}
-            value={date}
-            locale="it-IT"
-            className="rounded-lg"
-          />
-          <p className="text-sm mt-4">
-            Hai selezionato: <strong>{date.toLocaleDateString('it-IT')}</strong>
-          </p>
+          {/* Calendario settimanale */}
+<div>
+  <h2 className="text-lg font-semibold mb-2">
+    Settimana del {getWeekDays(selectedDate)[0].date.toLocaleDateString("it-IT")}
+  </h2>
+  <div className="flex gap-2 mb-4">
+    {getWeekDays(selectedDate).map((d) => {
+      const isActive = d.date.toDateString() === selectedDate.toDateString();
+      return (
+        <button
+          key={d.date.toISOString()}
+          onClick={() => setSelectedDate(d.date)}
+          className={`px-3 py-2 rounded-xl font-medium text-sm text-center w-12 ${
+            isActive
+              ? "bg-yellow-400 text-white"
+              : "bg-gray-100 text-gray-700"
+          }`}
+        >
+          <div className="capitalize">{d.label}</div>
+          <div>{d.date.getDate()}</div>
+        </button>
+      );
+    })}
+  </div>
+
+  {/* Appuntamenti per il giorno selezionato */}
+  <h3 className="font-semibold text-sm mb-2">
+    Appuntamenti per il {selectedDate.toLocaleDateString("it-IT")}
+  </h3>
+  <div className="flex flex-col gap-2 mb-2">
+    {(appointments[selectedDate.toDateString()] || []).map((appt, i) => (
+      <div key={i} className="text-sm">
+        • {appt}
+      </div>
+    ))}
+  </div>
+
+  {/* Form nuovo appuntamento */}
+  <form
+    onSubmit={(e) => {
+      e.preventDefault();
+      setAppointments((prev) => {
+        const key = selectedDate.toDateString();
+        const current = prev[key] || [];
+        return {
+          ...prev,
+          [key]: [...current, newAppt],
+        };
+      });
+      setNewAppt("");
+    }}
+    className="flex gap-2"
+  >
+    <input
+      type="text"
+      value={newAppt}
+      onChange={(e) => setNewAppt(e.target.value)}
+      placeholder="Nuovo appuntamento"
+      className="flex-1 px-2 py-1 rounded border text-sm"
+    />
+    <button
+      type="submit"
+      className="bg-yellow-400 text-white px-3 py-1 rounded text-sm"
+    >
+      Aggiungi
+    </button>
+  </form>
+</div>
+
 
           <div className="mt-4">
             <h3 className="font-semibold mb-1">Ultime ricette caricate</h3>
