@@ -36,7 +36,6 @@ export default function App() {
         date: new Date(d),
       });
     }
-
     return days;
   }
 
@@ -181,15 +180,14 @@ export default function App() {
             <button className="bg-yellow-400 px-4 py-2 rounded mt-2 w-full">Vai alle ricette</button>
           </div>
         </div>
-        <ChartsSection />
 
-      
+        <ChartsSection />
       </div>
     </div>
   );
 }
-export default function ChartsSection() {
-  // Dati fittizi
+
+function ChartsSection() {
   const ageData = [
     { group: '13-18', value: 30 },
     { group: '19-25', value: 80 },
@@ -224,7 +222,6 @@ export default function ChartsSection() {
 
   return (
     <div className="col-span-3 grid grid-cols-3 gap-4">
-      {/* Media età */}
       <div className="bg-white rounded-2xl p-4 shadow">
         <h3 className="font-bold mb-2">Media età</h3>
         <ResponsiveContainer width="100%" height={180}>
@@ -235,7 +232,6 @@ export default function ChartsSection() {
         </ResponsiveContainer>
       </div>
 
-      {/* Prime visita VS check */}
       <div className="bg-white rounded-2xl p-4 shadow">
         <h3 className="font-bold mb-2">Prime visita VS check</h3>
         <ResponsiveContainer width="100%" height={180}>
@@ -258,7 +254,6 @@ export default function ChartsSection() {
         </ResponsiveContainer>
       </div>
 
-      {/* Pie + legenda */}
       <div className="bg-white rounded-2xl p-4 shadow">
         <h3 className="font-bold mb-2">Giugno 2025</h3>
         <ResponsiveContainer width="100%" height={180}>
@@ -280,8 +275,7 @@ export default function ChartsSection() {
         <p className="text-sm mt-2 text-center">400 contatti hanno scelto un approccio empatico</p>
       </div>
 
-      {/* Adesione */}
-      <div className="col-span-3 bg-white rounded-2xl p-4 shadow">
+      <div className="col-span-3 bg-white rounded-2xl p-4 shadow mt-2">
         <h3 className="font-bold mb-2">Adesione piani alimentari</h3>
         <p className="text-sm text-red-600 mb-2">Molti utenti preferiscono sgarrare il sabato</p>
         <ResponsiveContainer width="100%" height={200}>
