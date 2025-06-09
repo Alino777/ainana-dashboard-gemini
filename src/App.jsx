@@ -200,7 +200,6 @@ export default function App() {
             <div className="bg-gray-100 p-2 rounded mb-1">Salmone scottato con limone</div>
             <button className="bg-yellow-400 px-4 py-2 rounded mt-2 w-full">Vai alle ricette</button>
           </div>
-        </div>
 
         <div className="col-span-3 flex flex-col gap-4">
           <div className="grid grid-cols-3 gap-4">
