@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import 'react-calendar/dist/Calendar.css';
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  AreaChart, Area, CartesianGrid, Legend, PieChart, Pie, Cell
+} from 'recharts';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -177,29 +181,115 @@ export default function App() {
             <button className="bg-yellow-400 px-4 py-2 rounded mt-2 w-full">Vai alle ricette</button>
           </div>
         </div>
+        <ChartsSection />
 
-        <div className="col-span-3 grid grid-cols-3 gap-4">
-          <div className="bg-white rounded-2xl p-4 shadow">
-            <p className="text-sm text-gray-600">Contatti</p>
-            <h2 className="text-2xl font-bold">800</h2>
-            <p className="text-xs mt-1">+20 lead</p>
-          </div>
-          <div className="bg-white rounded-2xl p-4 shadow">
-            <p className="text-sm text-gray-600">Visualizzazioni</p>
-            <h2 className="text-2xl font-bold">10 mila</h2>
-            <p className="text-xs text-red-500">+1000 view</p>
-          </div>
-          <div className="bg-white rounded-2xl p-4 shadow">
-            <p className="text-sm text-gray-600">Apprezzamenti</p>
-            <h2 className="text-2xl font-bold">200</h2>
-            <p className="text-xs mt-1">+20 like</p>
-          </div>
-          <div className="col-span-3 bg-white rounded-2xl p-4 shadow mt-4">
-            <h3 className="font-bold mb-2">Adesione piani alimentari</h3>
-            <p className="text-sm text-red-600">Molti utenti preferiscono sgarrare il sabato</p>
-            <div className="w-full h-40 bg-gray-100 mt-2 rounded" />
-          </div>
-        </div>
+      
+      </div>
+    </div>
+  );
+}
+export default function ChartsSection() {
+  // Dati fittizi
+  const ageData = [
+    { group: '13-18', value: 30 },
+    { group: '19-25', value: 80 },
+    { group: '26-30', value: 50 },
+    { group: '31-40', value: 70 },
+    { group: '<40', value: 40 },
+  ];
+
+  const visitsData = Array.from({ length: 14 }, (_, i) => ({
+    day: `G${i + 1}`,
+    prime: Math.floor(Math.random() * 50 + 50),
+    check: Math.floor(Math.random() * 50),
+  }));
+
+  const pieData = [
+    { name: 'Empatico', value: 400 },
+    { name: 'Motivazionale', value: 200 },
+    { name: 'Funzionale', value: 200 },
+  ];
+
+  const adherenceData = [
+    { day: 'L', value: 60 },
+    { day: 'M', value: 80 },
+    { day: 'M', value: 40 },
+    { day: 'G', value: 90 },
+    { day: 'V', value: 75 },
+    { day: 'S', value: 90 },
+    { day: 'D', value: 60 },
+  ];
+
+  const COLORS = ['#FFCE00', '#FF9F1C', '#3FA9F5'];
+
+  return (
+    <div className="col-span-3 grid grid-cols-3 gap-4">
+      {/* Media età */}
+      <div className="bg-white rounded-2xl p-4 shadow">
+        <h3 className="font-bold mb-2">Media età</h3>
+        <ResponsiveContainer width="100%" height={180}>
+          <BarChart data={ageData}>
+            <XAxis dataKey="group" />
+            <Bar dataKey="value" fill="#FFB400" radius={[4, 4, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Prime visita VS check */}
+      <div className="bg-white rounded-2xl p-4 shadow">
+        <h3 className="font-bold mb-2">Prime visita VS check</h3>
+        <ResponsiveContainer width="100%" height={180}>
+          <AreaChart data={visitsData}>
+            <defs>
+              <linearGradient id="colorPrime" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#3FA9F5" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="#3FA9F5" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="colorCheck" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#FF9F1C" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="#FF9F1C" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <XAxis dataKey="day" />
+            <Area type="monotone" dataKey="prime" stroke="#3FA9F5" fill="url(#colorPrime)" />
+            <Area type="monotone" dataKey="check" stroke="#FF9F1C" fill="url(#colorCheck)" />
+            <Legend />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Pie + legenda */}
+      <div className="bg-white rounded-2xl p-4 shadow">
+        <h3 className="font-bold mb-2">Giugno 2025</h3>
+        <ResponsiveContainer width="100%" height={180}>
+          <PieChart>
+            <Pie
+              data={pieData}
+              innerRadius={50}
+              outerRadius={70}
+              fill="#8884d8"
+              dataKey="value"
+              label
+            >
+              {pieData.map((_, index) => (
+                <Cell key={index} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+        <p className="text-sm mt-2 text-center">400 contatti hanno scelto un approccio empatico</p>
+      </div>
+
+      {/* Adesione */}
+      <div className="col-span-3 bg-white rounded-2xl p-4 shadow">
+        <h3 className="font-bold mb-2">Adesione piani alimentari</h3>
+        <p className="text-sm text-red-600 mb-2">Molti utenti preferiscono sgarrare il sabato</p>
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart data={adherenceData}>
+            <XAxis dataKey="day" />
+            <Bar dataKey="value" fill="#FFCE00" radius={[4, 4, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
