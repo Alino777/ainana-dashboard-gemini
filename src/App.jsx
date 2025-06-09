@@ -1,51 +1,62 @@
 import { useState } from "react";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import { motion } from "framer-motion";
 
 export default function App() {
   const [selectedDay, setSelectedDay] = useState("6");
   const [activeSection, setActiveSection] = useState("dashboard");
   const [date, setDate] = useState(new Date());
 
+  const tabs = [
+    { key: "dashboard", label: "Dashboard" },
+    { key: "dieta", label: "Diete" },
+    { key: "consigli", label: "Consigli" },
+    { key: "client", label: "Client management" },
+  ];
+
   return (
     <div className="min-h-screen bg-[#fffceb] font-sans text-[#333] p-4">
-      <nav className="relative flex items-center justify-between mb-6 px-6 bg-[#fff4cc] rounded-full shadow-md h-14">
-      <div className="flex items-center pl-2">
-  <img src="/logo.png" alt="Ainana logo" className="h-8 w-auto" />
-</div>
-  <div className="relative flex gap-6 font-medium text-[#333]">
-    {["dashboard", "dieta", "consigli", "client"].map((item, idx) => {
-      const labels = {
-        dashboard: "Dashboard",
-        dieta: "Diete",
-        consigli: "Consigli",
-        client: "Client management",
-      };
+      {/* Navbar con logo, tab animati, e notifiche */}
+      <nav className="flex justify-between items-center mb-6 px-6">
+        {/* Logo */}
+        <div className="flex items-center">
+          <img src="/logo.png" alt="Ainana logo" className="h-8 w-auto" />
+        </div>
 
-      const isActive = activeSection === item;
+        {/* Navbar centrale */}
+        <div className="relative bg-[#fff4cc] rounded-full px-2 py-1 flex gap-2 shadow-md">
+          <div className="relative flex">
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveSection(tab.key)}
+                className={`relative z-10 px-4 py-2 font-medium rounded-full transition-all ${
+                  activeSection === tab.key ? "text-black" : "text-gray-600"
+                }`}
+              >
+                {tab.label}
+                {activeSection === tab.key && (
+                  <motion.div
+                    layoutId="underline"
+                    className="absolute inset-0 bg-yellow-400 rounded-full z-[-1]"
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
 
-      return (
-        <button
-          key={idx}
-          onClick={() => setActiveSection(item)}
-          className={`relative px-4 py-2 z-10 transition-all duration-300 ${
-            isActive ? "text-[#000]" : "text-[#555]"
-          }`}
-        >
-          {labels[item]}
-          {isActive && (
-            <span className="absolute left-0 top-0 h-full w-full bg-yellow-400 rounded-full -z-10 transition-all duration-300"></span>
-          )}
-        </button>
-      );
-    })}
-  </div>
-  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md">
-    🔔
-  </div>
-</nav>
+        {/* Notifiche */}
+        <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md">
+          🔔
+        </div>
+      </nav>
 
+      {/* Contenuto principale */}
       <div className="grid grid-cols-4 gap-4">
+        {/* Colonna sinistra */}
         <div className="col-span-1 bg-white rounded-2xl p-4 shadow">
           <h2 className="text-lg font-semibold mb-4">Calendario</h2>
           <Calendar
@@ -54,7 +65,9 @@ export default function App() {
             locale="it-IT"
             className="rounded-lg"
           />
-          <p className="text-sm mt-4">Hai selezionato: <strong>{date.toLocaleDateString('it-IT')}</strong></p>
+          <p className="text-sm mt-4">
+            Hai selezionato: <strong>{date.toLocaleDateString('it-IT')}</strong>
+          </p>
 
           <div className="mt-4">
             <h3 className="font-semibold mb-1">Ultime ricette caricate</h3>
@@ -64,6 +77,7 @@ export default function App() {
           </div>
         </div>
 
+        {/* Colonna centrale */}
         <div className="col-span-3 grid grid-cols-3 gap-4">
           <div className="bg-white rounded-2xl p-4 shadow">
             <p className="text-sm text-gray-600">Contatti</p>
