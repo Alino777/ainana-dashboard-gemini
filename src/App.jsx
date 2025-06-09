@@ -7,7 +7,7 @@ export default function App() {
   const [selectedDay, setSelectedDay] = useState("6");
   const [activeSection, setActiveSection] = useState("dashboard");
   const [date, setDate] = useState(new Date());
-  const user = { name: "Anna" };
+  const user = { name: "Giovanna" };
 
   const tabs = [
     { key: "dashboard", label: "Dashboard" },
@@ -64,7 +64,8 @@ export default function App() {
 
   {/* Testo saluto */}
   <div className="text-lg font-semibold text-[#333]">
-    Ciao {user?.name}, bentornata!
+    Ciao {user?.name}, 
+    bentornata!
   </div>
 </div>
       {/* Contenuto principale */}
