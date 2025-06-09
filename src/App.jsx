@@ -35,8 +35,6 @@ function getWeekDays(baseDate = new Date(), offset = 0) {
       label: d.toLocaleDateString("it-IT", { weekday: "short" }), // lun, mar...
       date: new Date(d),
     });
-  }
-
   return days;
 }
   return (
