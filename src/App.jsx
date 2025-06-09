@@ -25,7 +25,7 @@ export default function App() {
         </div>
 
         {/* Navbar centrale */}
-        <div className="relative bg-[#fff4cc] rounded-full px-2 py-1 flex gap-2 shadow-md">
+        <div className="relative bg-[#fff4cc] rounded-full px-2 py-1 flex gap-2 shadow-md ml-4">
           <div className="relative flex">
             {tabs.map((tab) => (
               <button
