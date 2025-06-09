@@ -147,13 +147,23 @@ function getWeekDays(baseDate = new Date(), offset = 0) {
     Appuntamenti per il {selectedDate.toLocaleDateString("it-IT")}
   </h3>
   <div className="flex flex-col gap-2 mb-2">
-    {(appointments[selectedDate.toDateString()] || []).map((appt, i) => (
-      <div key={i} className="text-sm">
-        • {appt}
-      </div>
-    ))}
+  {(appointments[selectedDate.toDateString()] || []).map((appt, i) => (
+  <div key={i} className="text-sm flex justify-between items-center bg-gray-100 px-2 py-1 rounded">
+    <span>• {appt}</span>
+    <button
+      onClick={() => {
+        const key = selectedDate.toDateString();
+        setAppointments((prev) => ({
+          ...prev,
+          [key]: prev[key].filter((_, index) => index !== i),
+        }));
+      }}
+      className="text-xs text-red-500 hover:text-red-700 ml-2"
+    >
+      ✕
+    </button>
   </div>
-
+))}
   {/* Form nuovo appuntamento */}
   <form
   onSubmit={(e) => {
