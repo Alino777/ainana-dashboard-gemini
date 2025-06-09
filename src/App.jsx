@@ -9,15 +9,41 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#fffceb] font-sans text-[#333] p-4">
-      <nav className="flex justify-between items-center mb-6">
-        <div className="text-xl font-bold text-[#000]">🍍 Ainana</div>
-        <div className="flex gap-6 font-semibold">
-          <button className="bg-yellow-300 px-4 py-2 rounded-full">Dashboard</button>
-          <button>Dieta</button>
-          <button>Consigli</button>
-          <button>Client management</button>
-        </div>
-      </nav>
+      <nav className="relative flex items-center justify-between mb-6 px-6 bg-[#fff4cc] rounded-full shadow-md h-14">
+      <div className="flex items-center pl-2">
+  <img src="/logo.png" alt="Ainana logo" className="h-8 w-auto" />
+</div>
+  <div className="relative flex gap-6 font-medium text-[#333]">
+    {["dashboard", "dieta", "consigli", "client"].map((item, idx) => {
+      const labels = {
+        dashboard: "Dashboard",
+        dieta: "Diete",
+        consigli: "Consigli",
+        client: "Client management",
+      };
+
+      const isActive = activeSection === item;
+
+      return (
+        <button
+          key={idx}
+          onClick={() => setActiveSection(item)}
+          className={`relative px-4 py-2 z-10 transition-all duration-300 ${
+            isActive ? "text-[#000]" : "text-[#555]"
+          }`}
+        >
+          {labels[item]}
+          {isActive && (
+            <span className="absolute left-0 top-0 h-full w-full bg-yellow-400 rounded-full -z-10 transition-all duration-300"></span>
+          )}
+        </button>
+      );
+    })}
+  </div>
+  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md">
+    🔔
+  </div>
+</nav>
 
       <div className="grid grid-cols-4 gap-4">
         <div className="col-span-1 bg-white rounded-2xl p-4 shadow">
