@@ -6,7 +6,7 @@ import {
   AreaChart, Area, Legend, PieChart, Pie, Cell
 } from 'recharts';
 
-// Componente Icona per chiarezza (puoi usare una libreria come react-icons)
+// Componente Icona per chiarezza
 const SearchIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -15,7 +15,6 @@ const SearchIcon = () => (
 
 export default function App() {
   const [activeSection, setActiveSection] = useState("dashboard");
-  // Ho cambiato il nome in "Anna" per corrispondere all'immagine, ma puoi usare qualsiasi dato.
   const user = { name: "Anna", avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d" };
 
   // Dati semplificati per il nuovo design
@@ -34,38 +33,40 @@ export default function App() {
     { key: "consigli", label: "Consigli" },
     { key: "client", label: "Client management" },
   ];
-  
-  // Dati per i grafici (invariati dal tuo codice originale)
-   const ageData = [
+
+  // Dati per i grafici
+  const ageData = [
     { group: '13-18', value: 30 }, { group: '19-25', value: 80 }, { group: '26-30', value: 50 },
     { group: '31-40', value: 70 }, { group: '<40', value: 40 },
   ];
   const visitsData = Array.from({ length: 14 }, (_, i) => ({
     day: `G${i + 1}`, prime: Math.floor(Math.random() * 50 + 50), check: Math.floor(Math.random() * 50),
   }));
-  const pieData = [ { name: 'Empatico', value: 400 }, { name: 'Altri', value: 400 } ]; // Semplificato per il totale
+  const pieData = [ { name: 'Empatico', value: 400 }, { name: 'Altri', value: 400 } ];
   const adherenceData = [
     { day: 'L', value: 60 }, { day: 'M', value: 80 }, { day: 'M', value: 40 },
     { day: 'G', value: 90 }, { day: 'V', value: 75 }, { day: 'S', value: 90 }, { day: 'D', value: 60 },
   ];
   const COLORS = ['#FFCE00', '#F1F1F1'];
 
-
   return (
     <div className="min-h-screen bg-[#FFFBF0] font-sans text-[#333] p-6">
-      {/* ===== Barra di Navigazione Aggiornata ===== */}
+      {/* ===== Barra di Navigazione Aggiornata con Effetto Slider ===== */}
       <nav className="flex justify-between items-center mb-8">
         <div className="flex items-center gap-10">
           <img src="/logo.png" alt="Ainana logo" className="h-8 w-auto" /> {/* Assicurati che il percorso del logo sia corretto */}
-          <div className="relative flex items-center gap-2">
+          
+          {/* ---- NUOVA BARRA DI NAVIGAZIONE ---- */}
+          <div className="relative bg-[#fff4cc] rounded-full px-2 py-1 flex gap-2 shadow-md">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveSection(tab.key)}
-                className={`relative px-4 py-2 font-medium rounded-full transition-colors ${
-                  activeSection === tab.key ? "text-black" : "text-gray-500 hover:text-black"
+                className={`relative z-10 px-4 py-2 font-medium rounded-full transition-colors ${
+                  activeSection === tab.key ? "text-black" : "text-gray-600 hover:text-black"
                 }`}
               >
+                {tab.label}
                 {activeSection === tab.key && (
                   <motion.div
                     layoutId="underline"
@@ -73,7 +74,6 @@ export default function App() {
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   />
                 )}
-                {tab.label}
               </button>
             ))}
           </div>
