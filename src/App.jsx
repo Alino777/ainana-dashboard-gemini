@@ -17,14 +17,15 @@ export default function App() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const user = { name: "Anna", avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d" };
 
-  const [selectedDate, setSelectedDate] = useState(new Date(2025, 5, 6)); // Pre-seleziona il 6 Giugno
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [appointments, setAppointments] = useState({
-     "Fri Jun 06 2025": ["10:00: prima visita Mario Rossi", "11:00: check mensile Laura Bianchi", "12:00: cambio dieta Marco Blu"],
-     "Thu Jun 05 2025": ["Test appuntamento per ieri"]
+     // Aggiungo un appuntamento d'esempio per oggi per mostrare la funzionalità
+     [new Date().toDateString()]: ["10:00: prima visita Mario Rossi"]
   });
   const [newAppt, setNewAppt] = useState("");
   const [weekOffset, setWeekOffset] = useState(0);
 
+  // ----- FUNZIONE AGGIORNATA PER MOSTRARE 7 GIORNI -----
   function getWeekDays(baseDate = new Date(), offset = 0) {
     const start = new Date(baseDate);
     start.setDate(start.getDate() + offset * 7); 
@@ -32,10 +33,9 @@ export default function App() {
     const diff = start.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); 
     const monday = new Date(start.setDate(diff));
     const days = [];
-    for (let i = 0; i < 4; i++) {
-        // Simulo la settimana dell'immagine partendo da Giovedì
+    for (let i = 0; i < 7; i++) { // Loop modificato per 7 giorni
         const d = new Date(monday);
-        d.setDate(monday.getDate() + i + 3); 
+        d.setDate(monday.getDate() + i); 
         days.push({
             label: d.toLocaleDateString("it-IT", { weekday: "short" }),
             fullDate: d,
@@ -44,8 +44,8 @@ export default function App() {
     return days;
   }
   
-  const weekDays = getWeekDays(new Date(2025, 5, 6), weekOffset);
-  const currentMonthYear = new Date(2025, 5, 6).toLocaleDateString("it-IT", {
+  const weekDays = getWeekDays(new Date(), weekOffset);
+  const currentMonthYear = weekDays[0].fullDate.toLocaleDateString("it-IT", {
       month: "long", year: "numeric"
   });
 
@@ -109,7 +109,6 @@ export default function App() {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         
-        {/* ===== COLONNA SINISTRA UNIFICATA ===== */}
         <div className="lg:col-span-1 flex flex-col gap-6">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-full bg-yellow-200 overflow-hidden shadow-inner">
@@ -121,9 +120,8 @@ export default function App() {
             </div>
           </div>
 
-          {/* RIQUADRO BIANCO PER CALENDARIO E APPUNTAMENTI */}
           <div className="bg-white rounded-2xl p-6 shadow-sm flex flex-col gap-6">
-            {/* Sezione Calendario */}
+            {/* CALENDARIO A 7 GIORNI */}
             <div>
               <div className="flex justify-between items-center mb-4">
                   <h3 className="font-bold capitalize">{currentMonthYear}</h3>
@@ -132,26 +130,25 @@ export default function App() {
                       <button onClick={() => setWeekOffset(prev => prev + 1)} className="hover:text-black">{'>'}</button>
                   </div>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between gap-1">
                   {weekDays.map(({ label, fullDate }) => {
                       const isActive = selectedDate.toDateString() === fullDate.toDateString();
                       return (
                           <button 
                               key={fullDate.toISOString()}
                               onClick={() => setSelectedDate(fullDate)}
-                              className={`text-center p-2 rounded-lg w-14 transition-colors ${
+                              className={`text-center p-1 rounded-lg w-full transition-colors ${
                                   isActive ? 'bg-yellow-400 text-white shadow-md' : 'hover:bg-yellow-50'
                               }`}
                           >
-                              <div className={`text-sm capitalize ${isActive ? 'text-white' : 'text-gray-500'}`}>{label}</div>
-                              <div className="font-bold text-lg">{fullDate.getDate()}</div>
+                              <div className={`text-xs capitalize ${isActive ? 'text-white' : 'text-gray-500'}`}>{label}</div>
+                              <div className="font-bold text-base">{fullDate.getDate()}</div>
                           </button>
                       )
                   })}
               </div>
             </div>
             
-            {/* Sezione Appuntamenti Dinamica (CODICE RIPRISTINATO) */}
             <div>
                 {(appointments[selectedDate.toDateString()] || []).map((appt, i) => (
                     <div key={i} className="flex items-center justify-between gap-4 text-sm mb-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
@@ -170,7 +167,6 @@ export default function App() {
                         </button>
                     </div>
                 ))}
-                 {/* Form per aggiungere appuntamenti */}
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
@@ -193,18 +189,18 @@ export default function App() {
             </div>
           </div>
           
-          {/* Ultime Ricette Caricate */}
-          <div className="flex flex-col gap-4">
-            <h3 className="font-bold">Ultime ricette caricate</h3>
-            <div className="bg-white p-3 rounded-lg flex items-center gap-3 shadow-sm">
-                <img src="https://images.unsplash.com/photo-1540420773420-2366e2c88c24?q=80&w=2070&auto=format&fit=crop" alt="Pokè" className="w-12 h-12 rounded-md object-cover" />
+          {/* RIQUADRO SEPARATO PER LE RICETTE */}
+          <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col gap-4">
+            <h3 className="font-bold px-2">Ultime ricette caricate</h3>
+            <div className="bg-white p-2 rounded-lg flex items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1540420773420-2366e2c88c24?q=80&w=400&auto=format&fit=crop" alt="Pokè" className="w-16 h-16 rounded-md object-cover" />
                 <div>
                     <p className="font-semibold text-sm">Pokè di quinoa, ceci e verdure</p>
                     <a href="#" className="text-xs text-yellow-600 font-semibold">Modifica ricetta</a>
                 </div>
             </div>
-             <div className="bg-white p-3 rounded-lg flex items-center gap-3 shadow-sm">
-                <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=2070&auto=format&fit=crop" alt="Salmone" className="w-12 h-12 rounded-md object-cover" />
+             <div className="bg-white p-2 rounded-lg flex items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400&auto=format&fit=crop" alt="Salmone" className="w-16 h-16 rounded-md object-cover" />
                 <div>
                     <p className="font-semibold text-sm">Salmone scottato con limone</p>
                     <a href="#" className="text-xs text-yellow-600 font-semibold">Modifica ricetta</a>
@@ -214,9 +210,8 @@ export default function App() {
           </div>
         </div>
 
-        {/* ===== COLONNA DESTRA UNIFICATA IN UN RIQUADRO BIANCO ===== */}
+        {/* COLONNA DESTRA (INVARIATA) */}
         <div className="lg:col-span-3 bg-white rounded-2xl p-6 shadow-sm flex flex-col gap-6">
-          {/* Card Statistiche */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-[#FFF9E6] rounded-2xl p-4 flex items-center gap-4">
                 <div className="bg-yellow-400/50 p-3 rounded-full">
@@ -247,7 +242,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Griglia 2x2 per i Grafici con outline */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="rounded-2xl p-4 border border-gray-100">
               <h3 className="font-bold mb-2">Media età</h3>
