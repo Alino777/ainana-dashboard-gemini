@@ -10,6 +10,8 @@ export default function App() {
   const [selectedDate, setSelectedDate] = useState(new Date());
 const [appointments, setAppointments] = useState({});
 const [newAppt, setNewAppt] = useState("");
+const [weekOffset, setWeekOffset] = useState(0);
+
 
 
   const tabs = [
@@ -18,20 +20,26 @@ const [newAppt, setNewAppt] = useState("");
     { key: "consigli", label: "Consigli" },
     { key: "client", label: "Client management" },
   ];
-// 🔁 Funzione per ottenere i 7 giorni della settimana attiva
-function getWeekDays(baseDate = new Date()) {
+// 🔁 Funzione per ottenere i 5 giorni della settimana attiva
+function getWeekDays(baseDate = new Date(), offset = 0) {
   const start = new Date(baseDate);
-  const day = start.getDay(); // 0 (Domenica) -> 6 (Sabato)
-  const diff = start.getDate() - day + (day === 0 ? -6 : 1); // Inizio da Lunedì
+  start.setDate(start.getDate() + offset * 7);
+  const day = start.getDay();
+  const diff = start.getDate() - day + (day === 0 ? -6 : 1); // inizio lunedì
   const days = [];
 
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(start.setDate(diff + i));
+  for (let i = 0; i < 5; i++) {
+    const d = new Date(start);
+    d.setDate(diff + i);
     days.push({
-      label: d.toLocaleDateString("it-IT", { weekday: "short" }), // es. "lun"
-      date: d,
+      label: d.toLocaleDateString("it-IT", { weekday: "short" }), // lun, mar...
+      date: new Date(d),
     });
   }
+
+  return days;
+}
+
 
   return days;
 }
@@ -92,19 +100,40 @@ function getWeekDays(baseDate = new Date()) {
         {/* Colonna sinistra */}
         <div className="col-span-1 bg-white rounded-2xl p-4 shadow">
           <h2 className="text-lg font-semibold mb-4">Calendario</h2>
-          {/* Calendario settimanale */}
+      
+{/* Calendario settimanale */}
 <div>
-  <h2 className="text-lg font-semibold mb-2">
-    Settimana del {getWeekDays(selectedDate)[0].date.toLocaleDateString("it-IT")}
-  </h2>
+  {/* Header mese e navigazione */}
+  <div className="flex justify-between items-center mb-2">
+    <button
+      onClick={() => setWeekOffset((prev) => prev - 1)}
+      className="text-xl px-2"
+    >
+      ←
+    </button>
+    <h2 className="text-lg font-semibold">
+      {getWeekDays(selectedDate, weekOffset)[0].date.toLocaleDateString("it-IT", {
+        month: "long",
+        year: "numeric",
+      })}
+    </h2>
+    <button
+      onClick={() => setWeekOffset((prev) => prev + 1)}
+      className="text-xl px-2"
+    >
+      →
+    </button>
+  </div>
+
+  {/* Giorni visibili */}
   <div className="flex gap-2 mb-4">
-    {getWeekDays(selectedDate).map((d) => {
+    {getWeekDays(selectedDate, weekOffset).map((d) => {
       const isActive = d.date.toDateString() === selectedDate.toDateString();
       return (
         <button
           key={d.date.toISOString()}
           onClick={() => setSelectedDate(d.date)}
-          className={`px-3 py-2 rounded-xl font-medium text-sm text-center w-12 ${
+          className={`px-3 py-2 rounded-xl font-medium text-sm text-center w-14 ${
             isActive
               ? "bg-yellow-400 text-white"
               : "bg-gray-100 text-gray-700"
@@ -160,6 +189,7 @@ function getWeekDays(baseDate = new Date()) {
     </button>
   </form>
 </div>
+
 
 
           <div className="mt-4">
