@@ -264,8 +264,7 @@ function ChartsSection() {
   {/* Grafici */}
   <ChartsSection />
 </div>
-
-    </div><div className="col-span-3 grid grid-cols-3 gap-4">
+<div className="col-span-3 grid grid-cols-3 gap-4">
         <div className="bg-white rounded-2xl p-4 shadow">
           <h3 className="font-bold mb-2">Media età</h3>
           <ResponsiveContainer width="100%" height={180}>
