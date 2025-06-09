@@ -17,15 +17,42 @@ export default function App() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const user = { name: "Anna", avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d" };
 
-  // Dati semplificati per il nuovo design
-  const appointments = [
-    { time: "10:00", task: "prima visita Mario Rossi" },
-    { time: "11:00", task: "check mensile Laura Bianchi" },
-    { time: "12:00", task: "cambio dieta Marco Blu" },
-    { time: "15:30", task: "cambio dieta Gina Rossi" },
-    { time: "16:30", task: "prima visita Giacomo Blu" },
-    { time: "18:00", task: "cambio dieta Anna Blu" },
-  ];
+  // ----- NUOVI STATI PER IL CALENDARIO FUNZIONANTE -----
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [appointments, setAppointments] = useState({
+     // Puoi pre-popolare qualche appuntamento se vuoi
+     // [new Date().toDateString()]: ["prima visita Mario Rossi", "check mensile Laura Bianchi"]
+  });
+  const [newAppt, setNewAppt] = useState("");
+  const [weekOffset, setWeekOffset] = useState(0);
+
+  // ----- NUOVA FUNZIONE PER OTTENERE I GIORNI DELLA SETTIMANA -----
+  function getWeekDays(baseDate = new Date(), offset = 0) {
+    const start = new Date(baseDate);
+    // Imposta la data all'inizio della settimana corretta in base all'offset
+    start.setDate(start.getDate() + offset * 7); 
+    const dayOfWeek = start.getDay(); // 0 per Domenica, 1 per Lunedì, etc.
+    // Calcola il lunedì di quella settimana
+    const diff = start.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); 
+    const monday = new Date(start.setDate(diff));
+
+    const days = [];
+    for (let i = 0; i < 5; i++) { // Mostra 5 giorni lavorativi
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      days.push({
+        label: d.toLocaleDateString("it-IT", { weekday: "short" }),
+        fullDate: d,
+      });
+    }
+    return days;
+  }
+  
+  const weekDays = getWeekDays(new Date(), weekOffset);
+  const currentMonthYear = weekDays[0].fullDate.toLocaleDateString("it-IT", {
+      month: "long", year: "numeric"
+  });
+
 
   const tabs = [
     { key: "dashboard", label: "Dashboard" },
@@ -33,9 +60,9 @@ export default function App() {
     { key: "consigli", label: "Consigli" },
     { key: "client", label: "Client management" },
   ];
-
-  // Dati per i grafici
-  const ageData = [
+  
+  // Dati per i grafici (invariati)
+   const ageData = [
     { group: '13-18', value: 30 }, { group: '19-25', value: 80 }, { group: '26-30', value: 50 },
     { group: '31-40', value: 70 }, { group: '<40', value: 40 },
   ];
@@ -49,14 +76,12 @@ export default function App() {
   ];
   const COLORS = ['#FFCE00', '#F1F1F1'];
 
+
   return (
     <div className="min-h-screen bg-[#FFFBF0] font-sans text-[#333] p-6">
-      {/* ===== Barra di Navigazione Aggiornata con Effetto Slider ===== */}
       <nav className="flex justify-between items-center mb-8">
         <div className="flex items-center gap-10">
-          <img src="/logo.png" alt="Ainana logo" className="h-8 w-auto" /> {/* Assicurati che il percorso del logo sia corretto */}
-          
-          {/* ---- NUOVA BARRA DI NAVIGAZIONE ---- */}
+          <img src="/logo.png" alt="Ainana logo" className="h-8 w-auto" />
           <div className="relative bg-[#fff4cc] rounded-full px-2 py-1 flex gap-2 shadow-md">
             {tabs.map((tab) => (
               <button
@@ -86,10 +111,8 @@ export default function App() {
         </div>
       </nav>
 
-      {/* ===== Layout Principale a Griglia (Grid) ===== */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         
-        {/* ===== Colonna Sinistra ===== */}
         <div className="lg:col-span-1 flex flex-col gap-6">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-full bg-yellow-200 overflow-hidden shadow-inner">
@@ -101,47 +124,89 @@ export default function App() {
             </div>
           </div>
 
-          {/* Calendario Semplificato */}
+          {/* ===== CALENDARIO DINAMICO E FUNZIONANTE ===== */}
           <div className="bg-white rounded-2xl p-4 shadow-sm">
             <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold">Giugno 2025</h3>
+                <h3 className="font-bold capitalize">{currentMonthYear}</h3>
                 <div className="flex gap-2 text-gray-400">
-                    <button className="hover:text-black">{'<'}</button>
-                    <button className="hover:text-black">{'>'}</button>
+                    <button onClick={() => setWeekOffset(prev => prev - 1)} className="hover:text-black">{'<'}</button>
+                    <button onClick={() => setWeekOffset(prev => prev + 1)} className="hover:text-black">{'>'}</button>
                 </div>
             </div>
             <div className="flex justify-between">
-                <div className="text-center p-2 rounded-lg w-14">
-                    <div className="text-sm text-gray-500">Gio</div>
-                    <div className="font-bold text-lg">5</div>
-                </div>
-                <div className="text-center p-2 rounded-lg w-14 bg-yellow-400 text-white">
-                    <div className="text-sm">Ven</div>
-                    <div className="font-bold text-lg">6</div>
-                </div>
-                 <div className="text-center p-2 rounded-lg w-14">
-                    <div className="text-sm text-gray-500">Sab</div>
-                    <div className="font-bold text-lg">7</div>
-                </div>
-                <div className="text-center p-2 rounded-lg w-14">
-                    <div className="text-sm text-gray-500">Lun</div>
-                    <div className="font-bold text-lg">10</div>
-                </div>
+                {weekDays.map(({ label, fullDate }) => {
+                    const isActive = selectedDate.toDateString() === fullDate.toDateString();
+                    return (
+                        <button 
+                            key={fullDate.toISOString()}
+                            onClick={() => setSelectedDate(fullDate)}
+                            className={`text-center p-2 rounded-lg w-14 transition-colors ${
+                                isActive ? 'bg-yellow-400 text-white' : 'hover:bg-yellow-50'
+                            }`}
+                        >
+                            <div className={`text-sm capitalize ${isActive ? 'text-white' : 'text-gray-500'}`}>{label}</div>
+                            <div className="font-bold text-lg">{fullDate.getDate()}</div>
+                        </button>
+                    )
+                })}
             </div>
           </div>
           
-          {/* Lista Appuntamenti */}
+          {/* ===== LISTA APPUNTAMENTI DINAMICA ===== */}
           <div>
-            {appointments.map((appt, i) => (
-                <div key={i} className="flex items-center gap-4 text-sm mb-3 p-2 rounded-lg hover:bg-white transition-colors">
-                    <span className="font-semibold text-gray-600 w-16">{appt.time}</span>
-                    <span className="text-gray-800 flex-grow">{appt.task}</span>
-                    <span className="text-gray-400">{'>'}</span>
-                </div>
-            ))}
+            <h3 className="font-bold mb-3">
+                Appuntamenti del {selectedDate.toLocaleDateString("it-IT", { day: 'numeric', month: 'long' })}
+            </h3>
+            <div className="flex flex-col gap-2 mb-4">
+                {(appointments[selectedDate.toDateString()] || []).length > 0 ? (
+                    (appointments[selectedDate.toDateString()] || []).map((appt, i) => (
+                        <div key={i} className="flex items-center justify-between gap-4 text-sm p-3 rounded-lg bg-white shadow-sm transition-colors">
+                            <span className="text-gray-800 flex-grow">{appt}</span>
+                            <button 
+                                onClick={() => {
+                                    const key = selectedDate.toDateString();
+                                    setAppointments(prev => ({
+                                        ...prev,
+                                        [key]: prev[key].filter((_, index) => index !== i)
+                                    }));
+                                }}
+                                className="text-red-400 hover:text-red-600 font-bold"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                    ))
+                ) : (
+                    <p className="text-sm text-gray-500 p-3 bg-gray-50 rounded-lg">Nessun appuntamento.</p>
+                )}
+            </div>
+            
+            {/* Form per aggiungere appuntamenti */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!newAppt.trim()) return;
+                const key = selectedDate.toDateString();
+                const currentAppts = appointments[key] || [];
+                setAppointments(prev => ({...prev, [key]: [...currentAppts, newAppt]}));
+                setNewAppt("");
+              }}
+              className="flex flex-col gap-2"
+            >
+              <input
+                type="text"
+                value={newAppt}
+                onChange={(e) => setNewAppt(e.target.value)}
+                placeholder="Nuovo appuntamento..."
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition"
+              />
+              <button type="submit" className="bg-yellow-400 text-black font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-yellow-500 transition-all">
+                Aggiungi
+              </button>
+            </form>
           </div>
 
-          {/* Ultime Ricette Caricate */}
+          {/* Ultime Ricette Caricate (invariato) */}
           <div className="mt-4">
             <h3 className="font-bold mb-3">Ultime ricette caricate</h3>
             <div className="flex flex-col gap-3">
@@ -164,12 +229,12 @@ export default function App() {
           </div>
         </div>
 
-        {/* ===== Colonna Destra (Contenuto Principale) ===== */}
+        {/* ===== Colonna Destra (Contenuto Principale, invariato) ===== */}
         <div className="lg:col-span-3 flex flex-col gap-6">
-          {/* Card Statistiche Aggiornate con Icone */}
+          {/* Card Statistiche */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-4">
-                <div className="bg-yellow-100 p-3 rounded-full"> {/* Icon container */}
+                <div className="bg-yellow-100 p-3 rounded-full">
                     <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                 </div>
                 <div>
@@ -197,7 +262,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Griglia 2x2 per i Grafici */}
+          {/* Grafici */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white rounded-2xl p-4 shadow-sm">
               <h3 className="font-bold mb-2">Media età</h3>
@@ -209,7 +274,6 @@ export default function App() {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-
             <div className="bg-white rounded-2xl p-4 shadow-sm">
               <h3 className="font-bold mb-2">Prime visita VS check</h3>
               <ResponsiveContainer width="100%" height={200}>
@@ -232,8 +296,6 @@ export default function App() {
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-
-            {/* Grafico a Ciambella con Testo Centrale */}
             <div className="bg-white rounded-2xl p-4 shadow-sm relative">
               <h3 className="font-bold mb-2">Giugno 2025</h3>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
@@ -252,10 +314,8 @@ export default function App() {
               </ResponsiveContainer>
               <p className="text-sm mt-2 text-center text-gray-600">400 contatti hanno scelto un approccio empatico</p>
             </div>
-
             <div className="bg-white rounded-2xl p-4 shadow-sm">
               <h3 className="font-bold mb-2">Adesione piani alimentari</h3>
-              {/* Sottotitolo aggiornato */}
               <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
                  <span className="w-2 h-2 bg-red-500 rounded-full"></span>
                  <p>Molti utenti preferiscono concedersi lo sgarro il sabato</p>
@@ -272,7 +332,6 @@ export default function App() {
         </div>
       </div>
       
-      {/* ===== Pulsante Fluttuante (FAB) ===== */}
       <div className="fixed bottom-6 right-6 bg-yellow-400 text-black font-semibold px-5 py-3 rounded-full shadow-lg flex items-center gap-3">
         <span>💬</span>
         <span>Hai 3 nuovi messaggi</span>
