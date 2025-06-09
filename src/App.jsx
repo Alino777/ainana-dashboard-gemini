@@ -39,10 +39,6 @@ function getWeekDays(baseDate = new Date(), offset = 0) {
 
   return days;
 }
-
-
-  return days;
-}
   return (
     <div className="min-h-screen bg-[#fffceb] font-sans text-[#333] p-4">
       {/* Navbar con logo, tab animati, e notifiche */}
@@ -243,4 +239,4 @@ function getWeekDays(baseDate = new Date(), offset = 0) {
       </div>
     </div>
   );
-}
+
