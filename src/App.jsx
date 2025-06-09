@@ -17,8 +17,11 @@ export default function App() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const user = { name: "Anna", avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d" };
 
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [appointments, setAppointments] = useState({});
+  const [selectedDate, setSelectedDate] = useState(new Date(2025, 5, 6)); // Pre-seleziona il 6 Giugno
+  const [appointments, setAppointments] = useState({
+     "Fri Jun 06 2025": ["10:00: prima visita Mario Rossi", "11:00: check mensile Laura Bianchi", "12:00: cambio dieta Marco Blu"],
+     "Thu Jun 05 2025": ["Test appuntamento per ieri"]
+  });
   const [newAppt, setNewAppt] = useState("");
   const [weekOffset, setWeekOffset] = useState(0);
 
@@ -29,19 +32,20 @@ export default function App() {
     const diff = start.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); 
     const monday = new Date(start.setDate(diff));
     const days = [];
-    for (let i = 0; i < 4; i++) { // Mostra 4 giorni come da immagine
-      const d = new Date(monday);
-      d.setDate(monday.getDate() + i + 4); // +4 per partire da Giovedì 5 Giugno 2025
-      days.push({
-        label: d.toLocaleDateString("it-IT", { weekday: "short" }),
-        fullDate: d,
-      });
+    for (let i = 0; i < 4; i++) {
+        // Simulo la settimana dell'immagine partendo da Giovedì
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i + 3); 
+        days.push({
+            label: d.toLocaleDateString("it-IT", { weekday: "short" }),
+            fullDate: d,
+        });
     }
     return days;
   }
   
-  const weekDays = getWeekDays(new Date(2025, 5, 5), weekOffset); // Partiamo da Giugno 2025
-  const currentMonthYear = new Date(2025, 5, 5).toLocaleDateString("it-IT", {
+  const weekDays = getWeekDays(new Date(2025, 5, 6), weekOffset);
+  const currentMonthYear = new Date(2025, 5, 6).toLocaleDateString("it-IT", {
       month: "long", year: "numeric"
   });
 
@@ -147,14 +151,45 @@ export default function App() {
               </div>
             </div>
             
-            {/* Sezione Appuntamenti */}
+            {/* Sezione Appuntamenti Dinamica (CODICE RIPRISTINATO) */}
             <div>
-              {(appointments[selectedDate.toDateString()] || []).map((appt, i) => (
-                  <div key={i} className="flex items-center justify-between gap-4 text-sm mb-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                      <span className="text-gray-800 flex-grow">{appt}</span>
-                      <span className="text-gray-400 font-bold">{'>'}</span>
-                  </div>
-              ))}
+                {(appointments[selectedDate.toDateString()] || []).map((appt, i) => (
+                    <div key={i} className="flex items-center justify-between gap-4 text-sm mb-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                        <span className="text-gray-800 flex-grow">{appt}</span>
+                        <button 
+                            onClick={() => {
+                                const key = selectedDate.toDateString();
+                                setAppointments(prev => ({
+                                    ...prev,
+                                    [key]: prev[key].filter((_, index) => index !== i)
+                                }));
+                            }}
+                            className="text-gray-400 hover:text-red-500 font-bold"
+                        >
+                            {'>'}
+                        </button>
+                    </div>
+                ))}
+                 {/* Form per aggiungere appuntamenti */}
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        if (!newAppt.trim()) return;
+                        const key = selectedDate.toDateString();
+                        const currentAppts = appointments[key] || [];
+                        setAppointments(prev => ({...prev, [key]: [...currentAppts, newAppt]}));
+                        setNewAppt("");
+                    }}
+                    className="flex flex-col gap-2 mt-4"
+                >
+                    <input
+                        type="text"
+                        value={newAppt}
+                        onChange={(e) => setNewAppt(e.target.value)}
+                        placeholder="Nuovo appuntamento..."
+                        className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition"
+                    />
+                </form>
             </div>
           </div>
           
@@ -181,7 +216,7 @@ export default function App() {
 
         {/* ===== COLONNA DESTRA UNIFICATA IN UN RIQUADRO BIANCO ===== */}
         <div className="lg:col-span-3 bg-white rounded-2xl p-6 shadow-sm flex flex-col gap-6">
-          {/* Card Statistiche Aggiornate con i colori corretti */}
+          {/* Card Statistiche */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-[#FFF9E6] rounded-2xl p-4 flex items-center gap-4">
                 <div className="bg-yellow-400/50 p-3 rounded-full">
@@ -224,7 +259,6 @@ export default function App() {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-
             <div className="rounded-2xl p-4 border border-gray-100">
               <h3 className="font-bold mb-2">Prime visita VS check</h3>
               <ResponsiveContainer width="100%" height={200}>
@@ -247,7 +281,6 @@ export default function App() {
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-
             <div className="rounded-2xl p-4 border border-gray-100 relative">
               <h3 className="font-bold mb-2">Giugno 2025</h3>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
@@ -266,7 +299,6 @@ export default function App() {
               </ResponsiveContainer>
               <p className="text-sm mt-2 text-center text-gray-600">400 contatti hanno scelto un approccio empatico</p>
             </div>
-
             <div className="rounded-2xl p-4 border border-gray-100">
               <h3 className="font-bold mb-2">Adesione piani alimentari</h3>
               <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
