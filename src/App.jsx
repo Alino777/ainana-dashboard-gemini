@@ -221,112 +221,110 @@ function ChartsSection() {
   const COLORS = ['#FFCE00', '#FF9F1C', '#3FA9F5'];
 
   return (
-    <div className="col-span-3 grid grid-cols-3 gap-4 mb-4">
-  {/* Box: Contatti */}
-  <div className="bg-yellow-100 rounded-2xl p-4 shadow flex flex-col justify-between">
-    <div className="flex items-center gap-2">
-      <span className="text-2xl">👥</span>
-      <div>
-        <h3 className="font-bold text-xl">800</h3>
-        <p className="text-sm">Contatti</p>
-      </div>
-    </div>
-    <p className="text-xs text-gray-600 mt-2">+20 lead</p>
-  </div>
-
-  {/* Box: Visualizzazioni */}
-  <div className="bg-yellow-100 rounded-2xl p-4 shadow flex flex-col justify-between">
-    <div className="flex items-center gap-2">
-      <span className="text-2xl">👁️</span>
-      <div>
-        <h3 className="font-bold text-xl">10 mila</h3>
-        <p className="text-sm">Visualizzazioni</p>
-      </div>
-    </div>
-    <p className="text-xs text-gray-600 mt-2">+1000 views</p>
-  </div>
-
-  {/* Box: Apprezzamenti */}
-  <div className="bg-yellow-100 rounded-2xl p-4 shadow flex flex-col justify-between">
-    <div className="flex items-center gap-2">
-      <span className="text-2xl">❤️</span>
-      <div>
-        <h3 className="font-bold text-xl">200</h3>
-        <p className="text-sm">Apprezzamenti</p>
-      </div>
-    </div>
-    <p className="text-xs text-gray-600 mt-2">+20 like</p>
-  </div>
-</div>
-
-    <div className="col-span-3 grid grid-cols-3 gap-4">
-      <div className="bg-white rounded-2xl p-4 shadow">
-        <h3 className="font-bold mb-2">Media età</h3>
-        <ResponsiveContainer width="100%" height={180}>
-          <BarChart data={ageData}>
-            <XAxis dataKey="group" />
-            <Tooltip />
-            <Bar dataKey="value" fill="#FFB400" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+  <><div className="col-span-3 grid grid-cols-3 gap-4 mb-4">
+      {/* Box: Contatti */}
+      <div className="bg-yellow-100 rounded-2xl p-4 shadow flex flex-col justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">👥</span>
+          <div>
+            <h3 className="font-bold text-xl">800</h3>
+            <p className="text-sm">Contatti</p>
+          </div>
+        </div>
+        <p className="text-xs text-gray-600 mt-2">+20 lead</p>
       </div>
 
-      <div className="bg-white rounded-2xl p-4 shadow">
-        <h3 className="font-bold mb-2">Prime visita VS check</h3>
-        <ResponsiveContainer width="100%" height={180}>
-          <AreaChart data={visitsData}>
-            <defs>
-              <linearGradient id="colorPrime" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3FA9F5" stopOpacity={0.4} />
-                <stop offset="95%" stopColor="#3FA9F5" stopOpacity={0} />
-              </linearGradient>
-              <linearGradient id="colorCheck" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#FF9F1C" stopOpacity={0.4} />
-                <stop offset="95%" stopColor="#FF9F1C" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <XAxis dataKey="day" />
-            <Tooltip />
-            <Area type="monotone" dataKey="prime" stroke="#3FA9F5" fill="url(#colorPrime)" />
-            <Area type="monotone" dataKey="check" stroke="#FF9F1C" fill="url(#colorCheck)" />
-            <Legend />
-          </AreaChart>
-        </ResponsiveContainer>
+      {/* Box: Visualizzazioni */}
+      <div className="bg-yellow-100 rounded-2xl p-4 shadow flex flex-col justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">👁️</span>
+          <div>
+            <h3 className="font-bold text-xl">10 mila</h3>
+            <p className="text-sm">Visualizzazioni</p>
+          </div>
+        </div>
+        <p className="text-xs text-gray-600 mt-2">+1000 views</p>
       </div>
 
-      <div className="bg-white rounded-2xl p-4 shadow">
-        <h3 className="font-bold mb-2">Giugno 2025</h3>
-        <ResponsiveContainer width="100%" height={180}>
-          <PieChart>
-            <Tooltip />
-            <Pie
-              data={pieData}
-              innerRadius={50}
-              outerRadius={70}
-              fill="#8884d8"
-              dataKey="value"
-              label
-            >
-              {pieData.map((_, index) => (
-                <Cell key={index} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
-        <p className="text-sm mt-2 text-center">400 contatti hanno scelto un approccio empatico</p>
+      {/* Box: Apprezzamenti */}
+      <div className="bg-yellow-100 rounded-2xl p-4 shadow flex flex-col justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">❤️</span>
+          <div>
+            <h3 className="font-bold text-xl">200</h3>
+            <p className="text-sm">Apprezzamenti</p>
+          </div>
+        </div>
+        <p className="text-xs text-gray-600 mt-2">+20 like</p>
       </div>
+    </div><div className="col-span-3 grid grid-cols-3 gap-4">
+        <div className="bg-white rounded-2xl p-4 shadow">
+          <h3 className="font-bold mb-2">Media età</h3>
+          <ResponsiveContainer width="100%" height={180}>
+            <BarChart data={ageData}>
+              <XAxis dataKey="group" />
+              <Tooltip />
+              <Bar dataKey="value" fill="#FFB400" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
 
-      <div className="col-span-3 bg-white rounded-2xl p-4 shadow mt-2">
-        <h3 className="font-bold mb-2">Adesione piani alimentari</h3>
-        <p className="text-sm text-red-600 mb-2">Molti utenti preferiscono sgarrare il sabato</p>
-        <ResponsiveContainer width="100%" height={200}>
-          <BarChart data={adherenceData}>
-            <XAxis dataKey="day" />
-            <Tooltip />
-            <Bar dataKey="value" fill="#FFCE00" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
+        <div className="bg-white rounded-2xl p-4 shadow">
+          <h3 className="font-bold mb-2">Prime visita VS check</h3>
+          <ResponsiveContainer width="100%" height={180}>
+            <AreaChart data={visitsData}>
+              <defs>
+                <linearGradient id="colorPrime" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#3FA9F5" stopOpacity={0.4} />
+                  <stop offset="95%" stopColor="#3FA9F5" stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="colorCheck" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#FF9F1C" stopOpacity={0.4} />
+                  <stop offset="95%" stopColor="#FF9F1C" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <XAxis dataKey="day" />
+              <Tooltip />
+              <Area type="monotone" dataKey="prime" stroke="#3FA9F5" fill="url(#colorPrime)" />
+              <Area type="monotone" dataKey="check" stroke="#FF9F1C" fill="url(#colorCheck)" />
+              <Legend />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="bg-white rounded-2xl p-4 shadow">
+          <h3 className="font-bold mb-2">Giugno 2025</h3>
+          <ResponsiveContainer width="100%" height={180}>
+            <PieChart>
+              <Tooltip />
+              <Pie
+                data={pieData}
+                innerRadius={50}
+                outerRadius={70}
+                fill="#8884d8"
+                dataKey="value"
+                label={true}
+              >
+                {pieData.map((_, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+          <p className="text-sm mt-2 text-center">400 contatti hanno scelto un approccio empatico</p>
+        </div>
+
+        <div className="col-span-3 bg-white rounded-2xl p-4 shadow mt-2">
+          <h3 className="font-bold mb-2">Adesione piani alimentari</h3>
+          <p className="text-sm text-red-600 mb-2">Molti utenti preferiscono sgarrare il sabato</p>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={adherenceData}>
+              <XAxis dataKey="day" />
+              <Tooltip />
+              <Bar dataKey="value" fill="#FFCE00" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div></>
   );
 }
